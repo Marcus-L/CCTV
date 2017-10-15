@@ -1,0 +1,11 @@
+﻿{
+	"PollIntervalSeconds": 5,
+	"IdleTimeout": 60,
+	"TVs": [
+		{
+			"Name": "MLTV",
+			"OffUrl": "http://192.168.5.10:50002/off",
+			"DefaultVolume": 0.5
+		}
+	]
+}
