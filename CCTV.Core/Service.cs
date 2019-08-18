@@ -67,14 +67,20 @@ namespace CCTV.Core
                             // turning it off repeatedly
                             if (tv.SecondsIdle == Settings.IdleTimeout)
                             {
-                                await RunCommand("TurnOff", tv, tv.OffCommand);
+                                tv.OffCommands.ForEach(async command =>
+                                {
+                                    await RunCommand("TurnOff", tv, command);
+                                });
                             }
                         }
                         else
                         {
                             if (tv.SecondsIdle != 0)
                             {
-                                await RunCommand("TurnOn", tv, tv.OnCommand);
+                                tv.OnCommands.ForEach(async command =>
+                                {
+                                    await RunCommand("TurnOn", tv, command);
+                                });
                             }
                             tv.SecondsIdle = 0;
                             Log($"Device is busy: {application.DisplayName} {recv.IPEndPoint}");
