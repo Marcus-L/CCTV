@@ -6,8 +6,8 @@ I only use my TV for Chromecasting, which is 99% great, but there are a few prob
 * Starting a new Casting session sometimes sets volume to 100%, blasting the speakers (and your eardrums).
 
 This Service eliminates those problems:
-* Uses the [Simple CEC API](https://github.com/Marcus-L/cecapi) to turn the TV off after it becomes idle
-* Uses [GoogleCast](https://github.com/kakone/GoogleCast) to turn the volume down to 50% (configurable) if it notices that it's been set to the maximum (100%)
+* Uses the [Roku TV HTTP API](https://developer.roku.com/docs/developer-program/discovery/external-control-api.md) to turn the TV off after it becomes idle, or could use the [Simple CEC API](https://github.com/Marcus-L/cecapi) if your TV doesn't have a HTTP API.
+* Uses [GoogleCast](https://github.com/kakone/GoogleCast) to turn the volume down to 50% (configurable) if it notices that it's been set to the maximum (100%).
 
 ## Prerequisites
 

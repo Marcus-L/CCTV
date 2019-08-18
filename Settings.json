@@ -1,11 +1,19 @@
 ﻿{
-	"PollIntervalSeconds": 5,
-	"IdleTimeout": 60,
-	"TVs": [
-		{
-			"Name": "MLTV",
-			"OffUrl": "http://192.168.5.10:50002/off",
-			"DefaultVolume": 0.5
-		}
-	]
+  "PollIntervalSeconds": 5,
+  "IdleTimeout": 10,
+  "TVs": [
+    {
+      "Name": "Big TV",
+      "OnCommand": {
+        "File": "powershell",
+        // If you need chromecast info, use {0} for device name and {1} for IP address in Arguments
+        "Arguments": "-command \"curl http://192.168.5.135:8060/keypress/poweron -method POST -usebasicparsing\""
+      },
+      "OffCommand": {
+        "File": "powershell",
+        "Arguments": "-command \"curl http://192.168.5.135:8060/keypress/poweroff -method POST -usebasicparsing\""
+      },
+      "DefaultVolume": 0.5
+    }
+  ]
 }

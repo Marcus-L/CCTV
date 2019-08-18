@@ -1,6 +1,7 @@
 ﻿using GoogleCast;
 using GoogleCast.Channels;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -66,11 +67,15 @@ namespace CCTV.Core
                             // turning it off repeatedly
                             if (tv.SecondsIdle == Settings.IdleTimeout)
                             {
-                                await TurnOff(tv);
+                                await RunCommand("TurnOff", tv, tv.OffCommand);
                             }
                         }
                         else
                         {
+                            if (tv.SecondsIdle != 0)
+                            {
+                                await RunCommand("TurnOn", tv, tv.OnCommand);
+                            }
                             tv.SecondsIdle = 0;
                             Log($"Device is busy: {application.DisplayName} {recv.IPEndPoint}");
 
@@ -128,30 +133,32 @@ namespace CCTV.Core
             await RunLoopTask;
         }
 
-        private async Task TurnOff(TV tv)
+        private async Task RunCommand(string label, TV tv, Command command)
         {
             var tries = 3;
             while (tries-- > 0)
             {
                 try
                 {
-                    using (var client = new HttpClient())
+                    var process = new Process()
                     {
-                        var resp = await client.GetAsync(tv.OffUrl);
-                        if (resp.IsSuccessStatusCode)
+                        StartInfo = new ProcessStartInfo
                         {
-                            Log($"TurnOff Success: {resp.StatusCode}");
-                            return;
+                            FileName = command.File,
+                            Arguments = String.Format(command.Arguments, tv.Name, tv.IP.Address),
+                            RedirectStandardOutput = true,
+                            UseShellExecute = false,
+                            CreateNoWindow = true,
                         }
-                        else
-                        {
-                            Log($"TurnOff GET Error: {resp.StatusCode}");
-                        }
-                    }
+                    };
+                    process.Start();
+                    process.WaitForExit();
+                    Log($"{label} Command: " + process.StandardOutput.ReadToEnd());
+                    return;
                 }
                 catch (Exception ex)
                 {
-                    Log($"TurnOff error: {ex.Message}");
+                    Log($"{label} error: {ex.Message}");
 
                     // bugger, retry in a bit
                     await Task.Delay(5000);
