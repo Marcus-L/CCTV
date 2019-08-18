@@ -90,7 +90,7 @@ namespace CCTV.Core
                         tv.IP = null;
                         continue;
                     }
-                    await sender.DisconnectAsync();
+                    sender.Disconnect();
                 }
                 await Task.Delay(Settings.PollIntervalSeconds * 1000); // poll wait
             }
